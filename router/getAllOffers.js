@@ -1,12 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const Offer = require("../models/Offer");
-const { all } = require("./user");
 
 router.get("/offers", async (req, res) => {
   try {
     let filter = {};
 
+    // filter by title
     req.query.title ? (filter.product_name = new RegExp(req.query.title, "i")) : null;
 
     // filter by title and price max
@@ -26,7 +26,7 @@ router.get("/offers", async (req, res) => {
       }
     }
 
-    // filter by price asc and desc
+    // sort by price asc and desc
     let sort = {};
     if (req.query.sort === "price-desc") {
       sort.product_price = "desc";
@@ -34,16 +34,19 @@ router.get("/offers", async (req, res) => {
       sort.product_price = "asc";
     }
 
+    //offre limit par page
     let offerLimitParPage = req.query.limit ? req.query.limit : 4;
 
     let page = req.query.page < 1 ? 1 : req.query.page;
 
     const count = await Offer.countDocuments(filter);
+
     const result = await Offer.find(filter)
       .select("product_name product_price")
       .sort(sort)
       .limit(offerLimitParPage)
       .skip((page - 1) * offerLimitParPage);
+
     res.status(400).json({ count, result });
   } catch (error) {
     res.status(400).json({ error: error.message });
