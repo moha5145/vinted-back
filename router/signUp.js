@@ -28,24 +28,20 @@ router.post("/user/signup", async (req, res) => {
           token: token,
           salt: salt,
           hash: hash,
-          avatar: {},
         });
 
-        console.log(req.files);
-        const avatarToUpload = await cloudinary.uploader.upload(req.files.avatar.path, {
-          folder: `/vinted/users/avatars`,
-          public_id: `${newUser.account.username} - ${newUser._id}`,
-        });
-
-        newUser.avatar = avatarToUpload;
+        if (req.files.avatar) {
+          const avatarToUpload = await cloudinary.uploader.upload(req.files.avatar, {
+            folder: `/vinted/users/avatars`,
+            public_id: `${newUser.account.username} - ${newUser._id}`,
+          });
+          newUser.avatar = avatarToUpload;
+        }
 
         await newUser.save();
-        res.json({
-          _id: newUser.id,
-          token: newUser.token,
-          account: newUser.account,
-          avatar: newUser.avatar.secure_url,
-        });
+        const result = await User.findById(newUser._id).select("_id token account");
+
+        res.json(result);
       } else {
         res.status(400).json({ error: "email already exist" });
       }
