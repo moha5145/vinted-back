@@ -14,49 +14,42 @@ cloudinary.config({
 
 router.put("/offer/update", isAuthenticated, async (req, res) => {
   try {
-    const user = await User.findOne({ id: req.fields.userId });
-    const publishedOffer = await Offer.findOne({ id: req.fields.id });
+    // destruct req.fields
+    let { userId, id, title, description, price, condition, city, color, size, brand } = req.fields;
+
+    const user = await User.findOne({ id: userId });
+    const publishedOffer = await Offer.findOne({ id: id });
 
     if (!publishedOffer) {
       res.status(400).json("bad request");
     } else {
-      if (req.fields.title) {
-        publishedOffer.product_name = req.fields.title;
-      }
-      if (req.fields.description) {
-        publishedOffer.product_description = req.fields.description;
-      }
-      if (req.fields.price) {
-        publishedOffer.product_price = req.fields.price;
-      }
-      if (req.fields.condition || req.fields.city || req.fields.brand || req.fields.size || req.fields.color) {
-        for (let i = 0; i < publishedOffer.product_details.length; i++) {
-          // product_description = req.fields.price;
-          if (publishedOffer.product_details[i].MARQUE) {
-            publishedOffer.product_details[i].MARQUE = req.fields.brand;
-          }
-          if (publishedOffer.product_details[i].TAILLE) {
-            publishedOffer.product_details[i].TAILLE = req.fields.size;
-          }
-          if (publishedOffer.product_details[i].ÉTAT) {
-            publishedOffer.product_details[i].ÉTAT = req.fields.condition;
-          }
+      // destruct publishedOffer
+      let { product_name, product_description, product_price, product_details } = publishedOffer;
 
-          if (publishedOffer.product_details[i].COULEUR) {
-            publishedOffer.product_details[i].COULEUR = req.fields.color;
-          }
-          if (publishedOffer.product_details[i].EMPLACEMENT) {
-            publishedOffer.product_details[i].EMPLACEMENT = req.fields.city;
-          }
+      title ? (product_name = title) : product_name;
+
+      description ? (product_description = description) : product_description;
+
+      price ? (product_price = price) : product_price;
+
+      if (condition || city || brand || size || color) {
+        for (let i = 0; i < product_details.length; i++) {
+          product_details[i].MARQUE ? (product_details[i].MARQUE = brand) : product_details[i].MARQUE;
+
+          product_details[i].TAILLE ? (product_details[i].TAILLE = size) : product_details[i].TAILLE;
+
+          product_details[i].ÉTAT ? (product_details[i].ÉTAT = condition) : product_details[i].ÉTAT;
+
+          product_details[i].COULEUR ? (product_details[i].COULEUR = color) : product_details[i].COULEUR;
+
+          product_details[i].EMPLACEMENT ? (product_details[i].EMPLACEMENT = city) : product_details[i].EMPLACEMENT;
         }
         if (req.files.picture.path) {
-          const pictureToUpload = await cloudinary.uploader.upload(req.files.picture.path, { folder: `/vinted/offers/`, public_id: req.fields.id });
-          console.log(pictureToUpload);
+          const pictureToUpload = await cloudinary.uploader.upload(req.files.picture.path, { folder: `/vinted/offers/`, public_id: id });
           publishedOffer.product_image = pictureToUpload.secure_url;
         }
       }
 
-      //   console.log("hello");
       await publishedOffer.save();
       res.json(publishedOffer);
     }

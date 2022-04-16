@@ -10,7 +10,7 @@ const app = express();
 app.use(formidable());
 app.use(cors());
 
-const user = require("./router/user");
+const user = require("./router/signUp");
 app.use(user);
 
 const login = require("./router/login");
