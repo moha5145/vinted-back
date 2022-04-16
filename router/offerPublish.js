@@ -2,15 +2,8 @@ require("dotenv").config();
 const express = require("express");
 const router = express.Router();
 const Offer = require("../models/Offer");
-
-const cloudinary = require("cloudinary").v2;
 const isAuthenticated = require("../middleware/isAuthenticated");
-
-cloudinary.config({
-  cloud_name: process.env.CLOUD_NAME,
-  api_key: process.env.API_KEY,
-  api_secret: process.env.API_SECRET,
-});
+const cloudinary = require("../config/cloudinaryConfig");
 
 router.post("/offer/publish", isAuthenticated, async (req, res) => {
   try {

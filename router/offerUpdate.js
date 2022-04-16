@@ -4,20 +4,14 @@ const router = express.Router();
 const User = require("../models/User");
 const Offer = require("../models/Offer");
 const isAuthenticated = require("../middleware/isAuthenticated");
-const cloudinary = require("cloudinary").v2;
-
-cloudinary.config({
-  cloud_name: process.env.CLOUD_NAME,
-  api_key: process.env.API_KEY,
-  api_secret: process.env.API_SECRET,
-});
+const cloudinary = require("../config/cloudinaryConfig");
 
 router.put("/offer/update", isAuthenticated, async (req, res) => {
   try {
     // destruct req.fields
     let { userId, id, title, description, price, condition, city, color, size, brand } = req.fields;
 
-    const user = await User.findOne({ id: userId });
+    // const user = await User.findOne({ id: userId });
     const publishedOffer = await Offer.findOne({ id: id });
 
     if (!publishedOffer) {
