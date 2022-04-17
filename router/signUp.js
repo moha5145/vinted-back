@@ -23,19 +23,22 @@ router.post("/user/signup", async (req, res) => {
 
         const newUser = await new User({
           email: email,
-          account: { username: username },
+          account: { username: username, avatar: "" },
           newsletter: newsletter,
           token: token,
           salt: salt,
           hash: hash,
         });
 
+        // console.log(newUser);
+
         if (req.files.avatar) {
-          const avatarToUpload = await cloudinary.uploader.upload(req.files.avatar, {
+          const avatarToUpload = await cloudinary.uploader.upload(req.files.avatar.path, {
             folder: `/vinted/users/avatars`,
             public_id: `${newUser.account.username} - ${newUser._id}`,
           });
-          newUser.avatar = avatarToUpload;
+          newUser.account.avatar = avatarToUpload.secure_url;
+          // console.log(newUser);
         }
 
         await newUser.save();
