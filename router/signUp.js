@@ -23,7 +23,7 @@ router.post("/user/signup", async (req, res) => {
 
         const newUser = await new User({
           email: email,
-          account: { username: username, avatar: "" },
+          account: { username: username, avatar: {} },
           newsletter: newsletter,
           token: token,
           salt: salt,
@@ -37,7 +37,7 @@ router.post("/user/signup", async (req, res) => {
             folder: `/vinted/users/avatars`,
             public_id: `${newUser.account.username} - ${newUser._id}`,
           });
-          newUser.account.avatar = avatarToUpload.secure_url;
+          newUser.account.avatar = avatarToUpload;
           // console.log(newUser);
         }
 
