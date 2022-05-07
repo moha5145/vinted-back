@@ -37,7 +37,8 @@ router.post("/user/signup", async (req, res) => {
             folder: `/vinted/users/avatars`,
             public_id: `${newUser.account.username} - ${newUser._id}`,
           });
-          newUser.account.avatar = avatarToUpload.secure_url;
+          console.log(avatarToUpload);
+          newUser.account.avatar = avatarToUpload;
           // console.log(newUser);
         }
 
