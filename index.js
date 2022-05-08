@@ -35,7 +35,7 @@ app.get("*", (req, res) => {
   res.status(400).json("Pages not found !");
 });
 
-const port = process.env.PORT;
+const port = process.env.PORT || 4000;
 app.listen(port, () => {
   console.log(`server listening port : ${port}`);
 });

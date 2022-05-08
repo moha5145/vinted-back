@@ -27,7 +27,7 @@ router.post("/offer/publish", isAuthenticated, async (req, res) => {
     await newOffer.save();
 
     const result = await Offer.findById(newOffer._id).populate("owner", "-hash -salt -token");
-    console.log(result);
+    // console.log(result);
     res.json(result);
   } catch (error) {
     res.status(400).json({ error: error.message });
