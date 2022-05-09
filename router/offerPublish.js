@@ -23,7 +23,7 @@ router.post("/offer/publish", isAuthenticated, async (req, res) => {
       folder: `/vinted/offers/`,
       public_id: `${newOffer.title} - ${newOffer._id}`,
     });
-    newOffer.product_image = pictureToUpload.secure_url;
+    newOffer.product_image = pictureToUpload;
     await newOffer.save();
 
     const result = await Offer.findById(newOffer._id).populate("owner", "-hash -salt -token");
