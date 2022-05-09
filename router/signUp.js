@@ -23,7 +23,7 @@ router.post("/user/signup", async (req, res) => {
 
         const newUser = await new User({
           email: email,
-          account: { username: username, avatar: "" },
+          account: { username: username, avatar: {} },
           newsletter: newsletter,
           token: token,
           salt: salt,

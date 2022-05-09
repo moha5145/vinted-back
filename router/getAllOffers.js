@@ -41,13 +41,13 @@ router.get("/offers", async (req, res) => {
 
     const count = await Offer.countDocuments(filter);
 
-    const result = await Offer.find(filter)
+    const offers = await Offer.find(filter)
       .select("product_name product_price")
       .sort(sorted)
       .limit(offerLimitParPage)
       .skip((choicedPage - 1) * offerLimitParPage);
 
-    res.status(400).json({ count, result });
+    res.status(400).json({ count, offers });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }

@@ -15,7 +15,7 @@ router.post("/offer/publish", isAuthenticated, async (req, res) => {
       product_description: description,
       product_price: price,
       product_details: [{ MARQUE: brand }, { TAILLE: size }, { ÉTAT: condition }, { COULEUR: color }, { EMPLACEMENT: city }],
-      product_image: { secure_url: "" },
+      product_image: {},
       owner: req.user._id,
     });
 
