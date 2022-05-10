@@ -11,7 +11,7 @@ router.get("/offers", async (req, res) => {
     // filter by title
     title ? (filter.product_name = new RegExp(title, "i")) : null;
 
-    // filter by title and price max
+    // filter by title and price maxdata.offersdata.offers
     title && priceMax ? ((filter.product_name = new RegExp(title, "i")), (filter.product_price = { $lte: priceMax })) : null;
 
     //filter by price min only
@@ -42,12 +42,12 @@ router.get("/offers", async (req, res) => {
     const count = await Offer.countDocuments(filter);
 
     const offers = await Offer.find(filter)
-      .select("product_name product_price")
+      // .select("product_name product_price")
       .sort(sorted)
       .limit(offerLimitParPage)
       .skip((choicedPage - 1) * offerLimitParPage);
-
-    res.status(400).json({ count, offers });
+    console.log(offers);
+    res.status(200).json({ count, offers });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
