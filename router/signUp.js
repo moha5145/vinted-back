@@ -12,8 +12,8 @@ router.post("/user/signup", async (req, res) => {
     // destruct req.fields
     const { username, email, password, newsletter } = req.fields;
 
-    if (!username) {
-      res.json({ error: "user name is required" });
+    if (!username || !email || !password) {
+      res.status(400).json({ error: "All fields are required" });
     } else {
       const isUserExist = await User.findOne({ email: email });
       if (isUserExist === null) {
@@ -30,8 +30,6 @@ router.post("/user/signup", async (req, res) => {
           hash: hash,
         });
 
-        // console.log(newUser);
-
         if (req.files.avatar) {
           const avatarToUpload = await cloudinary.uploader.upload(req.files.avatar.path, {
             folder: `/vinted/users/avatars`,
@@ -39,7 +37,6 @@ router.post("/user/signup", async (req, res) => {
           });
           console.log(avatarToUpload);
           newUser.account.avatar = avatarToUpload;
-          // console.log(newUser);
         }
 
         await newUser.save();

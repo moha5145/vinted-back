@@ -35,7 +35,7 @@ router.get("/offers", async (req, res) => {
     }
 
     //offre limit par page
-    let offerLimitParPage = limit ? limit : 4;
+    let offerLimitParPage = limit ? limit : 5;
 
     let choicedPage = page < 1 ? 1 : page;
 
